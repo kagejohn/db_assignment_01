@@ -14,14 +14,21 @@ namespace Assignment_1_DB
         {
             ReCreateHashMapFromFile();
 
+            //TestData();
+
+            //OutputAllDataToConsole();
+
+            AcceptInputFromConsole();
+        }
+
+        static void TestData()
+        {
             AddToHashMapAndFile("Cake", "testCake");
             AddToHashMapAndFile("Fish", "testFish");
             AddToHashMapAndFile("Cat", "testCat");
-
-            OutputToConsole();
         }
 
-        static void OutputToConsole()
+        static void OutputAllDataToConsole()
         {
             Console.WriteLine("Hashmap:");
             Hashmap.ToList().ForEach(h => Console.WriteLine("Key: " + h.Key + " Value: " + h.Value));
@@ -55,6 +62,7 @@ namespace Assignment_1_DB
         }
         #endregion
 
+        #region get
         static string ReadFromFile(long byteOffSet)
         {
             List<byte> bytes = new List<byte>();
@@ -77,6 +85,14 @@ namespace Assignment_1_DB
             return byteString;
         }
 
+        static string GetValue(string key)
+        {
+            string fromFile = ReadFromFile(Hashmap[key]);
+            string[] fromFileSplit = fromFile.Split(new[] { "--|--" }, StringSplitOptions.None);
+            return fromFileSplit[1];
+        }
+        #endregion
+
         static void ReCreateHashMapFromFile()
         {
             long currentPosition = 0;
@@ -92,6 +108,38 @@ namespace Assignment_1_DB
                     Hashmap[fromFileSplit[0]] = currentPosition;
 
                     currentPosition += fromFile.Length + 1;
+                }
+            }
+        }
+
+        static void AcceptInputFromConsole()
+        {
+            Console.WriteLine("Input command followed by variables:");
+            string input = "startValue";
+
+            while (input != "")
+            {
+                input = Console.ReadLine();
+
+                string[] inputs = { };
+                if (!string.IsNullOrEmpty(input))
+                {
+                    inputs = input.Split(' ');
+                }
+
+                if (input.StartsWith("help"))
+                {
+                    Console.WriteLine("Examples:");
+                    Console.WriteLine("set 1 test");
+                    Console.WriteLine("get 1");
+                }
+                if (input.StartsWith("set"))
+                {
+                    AddToHashMapAndFile(inputs[1], inputs[2]);
+                }
+                if (input.StartsWith("get"))
+                {
+                    Console.WriteLine(GetValue(inputs[1]));
                 }
             }
         }
