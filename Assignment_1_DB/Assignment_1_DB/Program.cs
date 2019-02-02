@@ -97,17 +97,27 @@ namespace Assignment_1_DB
         {
             long currentPosition = 0;
 
-            using (FileStream fileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read))
+            try
             {
-                while (currentPosition < fileStream.Length)
+                using (FileStream fileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read))
                 {
-                    string fromFile = ReadFromFile(currentPosition);
+                    while (currentPosition < fileStream.Length)
+                    {
+                        string fromFile = ReadFromFile(currentPosition);
 
-                    string[] fromFileSplit = fromFile.Split(new[] { "--|--" }, StringSplitOptions.None);
+                        string[] fromFileSplit = fromFile.Split(new[] { "--|--" }, StringSplitOptions.None);
 
-                    Hashmap[fromFileSplit[0]] = currentPosition;
+                        Hashmap[fromFileSplit[0]] = currentPosition;
 
-                    currentPosition += fromFile.Length + 1;
+                        currentPosition += fromFile.Length + 1;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                using (FileStream fileStream = new FileStream(FileName, FileMode.Create))
+                {
+                    string notUsed = e.Message;
                 }
             }
         }
